@@ -11,7 +11,7 @@ pipeline {
 
     stage('Mail Notification') {
       steps {
-        mail(subject: 'Build Finished', body: 'This is a notification letting you know that the build stge has finished being executing', from: 'hs_hendel@esi.dz', to: 'hs_hendel@esi.dz')
+        mail(subject: 'Build Finished', body: 'This is a notification letting you know that the build stge has finished being executing', from: 'hs_hendel@esi.dz', to: 'samdz161999@gmail.com', cc: 'hs_hendel@esi.dz')
       }
     }
 
