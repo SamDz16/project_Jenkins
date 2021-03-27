@@ -1,0 +1,94 @@
+plugins {
+    id 'java'
+    id "com.github.spacialcircumstances.gradle-cucumber-reporting" version "0.1.22"
+    id 'jacoco'
+    id "org.sonarqube" version "3.1.1"
+    id "net.madeng.slack" version "0.0.23"
+}
+
+group 'com.example'
+version '1.0'
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url 'https://mymavenrepo.com/repo/R3pDtQrsoibShcFGQjlQ/'
+        credentials {
+            username 'myMavenRepo'
+            password 'tpogl'
+        }
+    }
+}
+
+apply plugin: 'maven-publish'
+
+slack {
+    webhookUrl 'https://hooks.slack.com/services/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'
+    message {
+        text = "Project is built newly and deployed into TP 5 OGL"
+        channel = '#tp-5-ogl'
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            url 'https://mymavenrepo.com/repo/R3pDtQrsoibShcFGQjlQ/'
+            credentials {
+                username 'myMavenRepo'
+                password 'tpogl'
+            }
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+dependencies {
+    testImplementation 'io.cucumber:cucumber-java:6.0.0'
+    testImplementation 'io.cucumber:cucumber-junit:6.0.0'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+cucumberReports {
+    outputDir = file('build/reports/cucumber')
+    buildId = '0'
+    reports = files('reports/example-report.json')
+}
+
+apply plugin: "org.sonarqube"
+
+test.finalizedBy("sonarqube")
+
+task copyReports (type:Copy) {
+    from 'build/reports'
+    into 'MatrixRelease/Matrix_v_1.0'
+}
+
+task copyDocs (type:Copy) {
+    from 'build/docs'
+    into 'MatrixRelease/Matrix_v_1.0'
+}
+
+task copyLibs (type:Copy) {
+    from 'build/libs'
+    into 'MatrixRelease/Matrix_v_1.0'
+}
+
+tasks.register("generateMatrixAPI"){
+    doLast{
+        println "Copie des dossiers docs, reports et libs"
+    }
+}
+
+generateMatrixAPI.dependsOn "copyReports", "copyDocs", "copyLibs", build, javadoc
+
+generateMatrixAPI.finalizedBy "publish"
+
+publishToSlack.finalizedBy "publish"
+
