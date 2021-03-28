@@ -15,5 +15,22 @@ pipeline {
       }
     }
 
+    stage('Code Analysis') {
+      parallel {
+        stage('Code Analysis') {
+          steps {
+            waitForQualityGate true
+          }
+        }
+
+        stage('Test Reporting') {
+          steps {
+            cucumber 'reports/example-report.json'
+          }
+        }
+
+      }
+    }
+
   }
 }
