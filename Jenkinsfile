@@ -21,7 +21,10 @@ pipeline {
       parallel {
         stage('Code Analysis') {
           steps {
-            withSonarQubeEnv 'build/sonar/report-task.txt'
+            withSonarQubeEnv('sonar') {
+              bat 'gradle sonarqube'
+            }
+
             waitForQualityGate true
           }
         }
