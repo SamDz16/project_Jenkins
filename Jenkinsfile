@@ -46,7 +46,7 @@ pipeline {
 
     stage('Slack Notification') {
       steps {
-        slackSend(baseUrl: 'https://hooks.slack.com/services', channel: '#project', notifyCommitters: true, sendAsText: true, username: 'SAMY HENDEL', message: 'This is a slack notification letting you know that he process has finished', replyBroadcast: true, teamDomain: 'https://app.slack.com/client', token: 'T01SJTB0CQ5/B01S7A6BKAB/sO1DfcByynE2Wz12LBoy00ip')
+        slackSend(baseUrl: 'https://hooks.slack.com/services', channel: '#projet', notifyCommitters: true, sendAsText: true, username: 'SAMY HENDEL', message: 'This is a slack notification letting you know that he process has finished', replyBroadcast: true, teamDomain: 'https://app.slack.com/client', token: 'T01SJTB0CQ5/B01S7A6BKAB/sO1DfcByynE2Wz12LBoy00ip')
       }
     }
 
