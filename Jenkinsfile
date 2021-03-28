@@ -4,9 +4,9 @@ pipeline {
     stage('Build') {
       steps {
         bat 'gradle build'
-        javadoc(javadocDir: 'build/docs', keepAll: true)
+        bat 'gradle javadoc'
         archiveArtifacts 'build/libs/*.jar'
-        junit 'build/reports/tests/test/*.html'
+        archiveArtifacts 'build/docs/javadoc/**'
       }
     }
 
