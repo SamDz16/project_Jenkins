@@ -4,15 +4,16 @@ pipeline {
     stage('Build') {
       steps {
         bat 'gradle build'
-        javadoc(javadocDir: 'build/docs', keepAll: true)
+        bat 'gradle javadoc'
         archiveArtifacts 'build/libs/*.jar'
-        junit 'build/reports/tests/test/*.html'
+        archiveArtifacts 'build/docs/javadoc/**'
+        junit 'build/test-results/test/*.xml'
       }
     }
 
     stage('Mail Notification') {
       steps {
-        mail(subject: 'Build Notification', body: 'This is a notification letting you know that the build stage has finished', to: 'samdz161999@gmail.com', cc: 'samdz161999@gmail.com', from: 'hs_hendel@esi.dz')
+        mail(subject: 'Build Notification', body: 'This is a notification letting you know that the build stage has finished', to: 'hs_hendel@esi.dz', cc: 'samdz161999@gmail.com', from: 'hs_hendel@esi.dz')
       }
     }
 
@@ -20,7 +21,10 @@ pipeline {
       parallel {
         stage('Code Analysis') {
           steps {
-            withSonarQubeEnv 'build/sonar/report-task.txt'
+            withSonarQubeEnv('sonar') {
+              bat 'gradle sonarQube'
+            }
+
             waitForQualityGate true
           }
         }
